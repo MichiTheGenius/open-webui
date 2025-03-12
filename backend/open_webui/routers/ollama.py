@@ -57,6 +57,7 @@ from open_webui.env import (
     AIOHTTP_CLIENT_TIMEOUT,
     AIOHTTP_CLIENT_TIMEOUT_MODEL_LIST,
     BYPASS_MODEL_ACCESS_CONTROL,
+    WEBUI_BASE_PATH,
 )
 from open_webui.constants import ERROR_MESSAGES
 
@@ -197,8 +198,8 @@ def get_api_key(idx, url, configs):
 router = APIRouter()
 
 
-@router.head("/")
-@router.get("/")
+@router.head(f"{WEBUI_BASE_PATH}")
+@router.get(f"{WEBUI_BASE_PATH}")
 async def get_status():
     return {"status": True}
 
@@ -208,7 +209,7 @@ class ConnectionVerificationForm(BaseModel):
     key: Optional[str] = None
 
 
-@router.post("/verify")
+@router.post(f"{WEBUI_BASE_PATH}/verify")
 async def verify_connection(
     form_data: ConnectionVerificationForm, user=Depends(get_admin_user)
 ):
@@ -256,7 +257,7 @@ async def verify_connection(
             raise HTTPException(status_code=500, detail=error_detail)
 
 
-@router.get("/config")
+@router.get(f"{WEBUI_BASE_PATH}/config")
 async def get_config(request: Request, user=Depends(get_admin_user)):
     return {
         "ENABLE_OLLAMA_API": request.app.state.config.ENABLE_OLLAMA_API,
@@ -271,7 +272,7 @@ class OllamaConfigForm(BaseModel):
     OLLAMA_API_CONFIGS: dict
 
 
-@router.post("/config/update")
+@router.post(f"{WEBUI_BASE_PATH}/config/update")
 async def update_config(
     request: Request, form_data: OllamaConfigForm, user=Depends(get_admin_user)
 ):
@@ -396,8 +397,8 @@ async def get_filtered_models(models, user):
     return filtered_models
 
 
-@router.get("/api/tags")
-@router.get("/api/tags/{url_idx}")
+@router.get(f"{WEBUI_BASE_PATH}/api/tags")
+@router.get(f"{WEBUI_BASE_PATH}/api/tags/{{url_idx}}")
 async def get_ollama_tags(
     request: Request, url_idx: Optional[int] = None, user=Depends(get_verified_user)
 ):
@@ -454,8 +455,8 @@ async def get_ollama_tags(
     return models
 
 
-@router.get("/api/version")
-@router.get("/api/version/{url_idx}")
+@router.get(f"{WEBUI_BASE_PATH}/api/version")
+@router.get(f"{WEBUI_BASE_PATH}/api/version/{{url_idx}}")
 async def get_ollama_versions(request: Request, url_idx: Optional[int] = None):
     if request.app.state.config.ENABLE_OLLAMA_API:
         if url_idx is None:
@@ -518,7 +519,7 @@ async def get_ollama_versions(request: Request, url_idx: Optional[int] = None):
         return {"version": False}
 
 
-@router.get("/api/ps")
+@router.get(f"{WEBUI_BASE_PATH}/api/ps")
 async def get_ollama_loaded_models(request: Request, user=Depends(get_verified_user)):
     """
     List models that are currently loaded into Ollama memory, and which node they are loaded on.
@@ -548,8 +549,8 @@ class ModelNameForm(BaseModel):
     name: str
 
 
-@router.post("/api/pull")
-@router.post("/api/pull/{url_idx}")
+@router.post(f"{WEBUI_BASE_PATH}/api/pull")
+@router.post(f"{WEBUI_BASE_PATH}/api/pull/{{url_idx}}")
 async def pull_model(
     request: Request,
     form_data: ModelNameForm,
@@ -576,8 +577,8 @@ class PushModelForm(BaseModel):
     stream: Optional[bool] = None
 
 
-@router.delete("/api/push")
-@router.delete("/api/push/{url_idx}")
+@router.delete(f"{WEBUI_BASE_PATH}/api/push")
+@router.delete(f"{WEBUI_BASE_PATH}/api/push/{{url_idx}}")
 async def push_model(
     request: Request,
     form_data: PushModelForm,
@@ -615,8 +616,8 @@ class CreateModelForm(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
-@router.post("/api/create")
-@router.post("/api/create/{url_idx}")
+@router.post(f"{WEBUI_BASE_PATH}/api/create")
+@router.post(f"{WEBUI_BASE_PATH}/api/create/{{url_idx}}")
 async def create_model(
     request: Request,
     form_data: CreateModelForm,
@@ -639,8 +640,8 @@ class CopyModelForm(BaseModel):
     destination: str
 
 
-@router.post("/api/copy")
-@router.post("/api/copy/{url_idx}")
+@router.post(f"{WEBUI_BASE_PATH}/api/copy")
+@router.post(f"{WEBUI_BASE_PATH}/api/copy/{{url_idx}}")
 async def copy_model(
     request: Request,
     form_data: CopyModelForm,
@@ -704,8 +705,8 @@ async def copy_model(
         )
 
 
-@router.delete("/api/delete")
-@router.delete("/api/delete/{url_idx}")
+@router.delete(f"{WEBUI_BASE_PATH}/api/delete")
+@router.delete(f"{WEBUI_BASE_PATH}/api/delete/{{url_idx}}")
 async def delete_model(
     request: Request,
     form_data: ModelNameForm,
@@ -769,7 +770,7 @@ async def delete_model(
         )
 
 
-@router.post("/api/show")
+@router.post(f"{WEBUI_BASE_PATH}/api/show")
 async def show_model_info(
     request: Request, form_data: ModelNameForm, user=Depends(get_verified_user)
 ):
@@ -836,8 +837,8 @@ class GenerateEmbedForm(BaseModel):
     keep_alive: Optional[Union[int, str]] = None
 
 
-@router.post("/api/embed")
-@router.post("/api/embed/{url_idx}")
+@router.post(f"{WEBUI_BASE_PATH}/api/embed")
+@router.post(f"{WEBUI_BASE_PATH}/api/embed/{{url_idx}}")
 async def embed(
     request: Request,
     form_data: GenerateEmbedForm,
@@ -915,8 +916,8 @@ class GenerateEmbeddingsForm(BaseModel):
     keep_alive: Optional[Union[int, str]] = None
 
 
-@router.post("/api/embeddings")
-@router.post("/api/embeddings/{url_idx}")
+@router.post(f"{WEBUI_BASE_PATH}/api/embeddings")
+@router.post(f"{WEBUI_BASE_PATH}/api/embeddings/{{url_idx}}")
 async def embeddings(
     request: Request,
     form_data: GenerateEmbeddingsForm,
@@ -1002,8 +1003,8 @@ class GenerateCompletionForm(BaseModel):
     keep_alive: Optional[Union[int, str]] = None
 
 
-@router.post("/api/generate")
-@router.post("/api/generate/{url_idx}")
+@router.post(f"{WEBUI_BASE_PATH}/api/generate")
+@router.post(f"{WEBUI_BASE_PATH}/api/generate/{{url_idx}}")
 async def generate_completion(
     request: Request,
     form_data: GenerateCompletionForm,
@@ -1089,8 +1090,8 @@ async def get_ollama_url(request: Request, model: str, url_idx: Optional[int] = 
     return url, url_idx
 
 
-@router.post("/api/chat")
-@router.post("/api/chat/{url_idx}")
+@router.post(f"{WEBUI_BASE_PATH}/api/chat")
+@router.post(f"{WEBUI_BASE_PATH}/api/chat/{{url_idx}}")
 async def generate_chat_completion(
     request: Request,
     form_data: dict,
@@ -1202,8 +1203,8 @@ class OpenAICompletionForm(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
-@router.post("/v1/completions")
-@router.post("/v1/completions/{url_idx}")
+@router.post(f"{WEBUI_BASE_PATH}/v1/completions")
+@router.post(f"{WEBUI_BASE_PATH}/v1/completions/{{url_idx}}")
 async def generate_openai_completion(
     request: Request,
     form_data: dict,
@@ -1278,8 +1279,8 @@ async def generate_openai_completion(
     )
 
 
-@router.post("/v1/chat/completions")
-@router.post("/v1/chat/completions/{url_idx}")
+@router.post(f"{WEBUI_BASE_PATH}/v1/chat/completions")
+@router.post(f"{WEBUI_BASE_PATH}/v1/chat/completions/{{url_idx}}")
 async def generate_openai_chat_completion(
     request: Request,
     form_data: dict,
@@ -1357,8 +1358,8 @@ async def generate_openai_chat_completion(
     )
 
 
-@router.get("/v1/models")
-@router.get("/v1/models/{url_idx}")
+@router.get(f"{WEBUI_BASE_PATH}/v1/models")
+@router.get(f"{WEBUI_BASE_PATH}/v1/models/{{url_idx}}")
 async def get_openai_models(
     request: Request,
     url_idx: Optional[int] = None,
@@ -1503,8 +1504,8 @@ async def download_file_stream(
 
 
 # url = "https://huggingface.co/TheBloke/stablelm-zephyr-3b-GGUF/resolve/main/stablelm-zephyr-3b.Q2_K.gguf"
-@router.post("/models/download")
-@router.post("/models/download/{url_idx}")
+@router.post(f"{WEBUI_BASE_PATH}/models/download")
+@router.post(f"{WEBUI_BASE_PATH}/models/download/{{url_idx}}")
 async def download_model(
     request: Request,
     form_data: UrlForm,
@@ -1536,8 +1537,8 @@ async def download_model(
 
 
 # TODO: Progress bar does not reflect size & duration of upload.
-@router.post("/models/upload")
-@router.post("/models/upload/{url_idx}")
+@router.post(f"{WEBUI_BASE_PATH}/models/upload")
+@router.post(f"{WEBUI_BASE_PATH}/models/upload/{{url_idx}}")
 async def upload_model(
     request: Request,
     file: UploadFile = File(...),

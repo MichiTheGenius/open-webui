@@ -13,6 +13,7 @@ from open_webui.env import (
     WEBSOCKET_MANAGER,
     WEBSOCKET_REDIS_URL,
     WEBSOCKET_REDIS_LOCK_TIMEOUT,
+    WEBUI_BASE_PATH
 )
 from open_webui.utils.auth import decode_token
 from open_webui.socket.utils import RedisDict, RedisLock
@@ -117,7 +118,7 @@ async def periodic_usage_pool_cleanup():
 
 app = socketio.ASGIApp(
     sio,
-    socketio_path="/ws/socket.io",
+    socketio_path=f"{WEBUI_BASE_PATH}/ws/socket.io",
 )
 
 

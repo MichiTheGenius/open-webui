@@ -40,6 +40,7 @@ from open_webui.env import (
     WEBUI_NAME,
     WEBUI_AUTH_COOKIE_SAME_SITE,
     WEBUI_AUTH_COOKIE_SECURE,
+    WEBUI_BASE_PATH,
 )
 from open_webui.utils.misc import parse_duration
 from open_webui.utils.auth import get_password_hash, create_token
@@ -350,14 +351,14 @@ class OAuthManager:
                                         guessed_mime_type = "image/jpeg"
                                     picture_url = f"data:{guessed_mime_type};base64,{base64_encoded_picture}"
                                 else:
-                                    picture_url = "/user.png"
+                                    picture_url = f"{WEBUI_BASE_PATH}/user.png"
                     except Exception as e:
                         log.error(
                             f"Error downloading profile image '{picture_url}': {e}"
                         )
-                        picture_url = "/user.png"
+                        picture_url = f"{WEBUI_BASE_PATH}/user.png"
                 if not picture_url:
-                    picture_url = "/user.png"
+                    picture_url = f"{WEBUI_BASE_PATH}/user.png"
 
                 username_claim = auth_manager_config.OAUTH_USERNAME_CLAIM
 

@@ -1,9 +1,10 @@
 from test.util.abstract_integration_test import AbstractPostgresTest
 from test.util.mock_user import mock_webui_user
+from open_webui.env import WEBUI_BASE_PATH
 
 
 class TestAuths(AbstractPostgresTest):
-    BASE_PATH = "/api/v1/auths"
+    BASE_PATH = f"{WEBUI_BASE_PATH}/api/v1/auths"
 
     def setup_class(cls):
         super().setup_class()
@@ -22,7 +23,7 @@ class TestAuths(AbstractPostgresTest):
             "name": "John Doe",
             "email": "john.doe@openwebui.com",
             "role": "user",
-            "profile_image_url": "/user.png",
+            "profile_image_url": f"{WEBUI_BASE_PATH}/user.png",
         }
 
     def test_update_profile(self):
@@ -32,19 +33,19 @@ class TestAuths(AbstractPostgresTest):
             email="john.doe@openwebui.com",
             password=get_password_hash("old_password"),
             name="John Doe",
-            profile_image_url="/user.png",
+            profile_image_url=f"{WEBUI_BASE_PATH}/user.png",
             role="user",
         )
 
         with mock_webui_user(id=user.id):
             response = self.fast_api_client.post(
-                self.create_url("/update/profile"),
-                json={"name": "John Doe 2", "profile_image_url": "/user2.png"},
+                self.create_url(f"{WEBUI_BASE_PATH}/update/profile"),
+                json={"name": "John Doe 2", "profile_image_url": f"{WEBUI_BASE_PATH}/user2.png"},
             )
         assert response.status_code == 200
         db_user = self.users.get_user_by_id(user.id)
         assert db_user.name == "John Doe 2"
-        assert db_user.profile_image_url == "/user2.png"
+        assert db_user.profile_image_url == f"{WEBUI_BASE_PATH}/user2.png"
 
     def test_update_password(self):
         from open_webui.utils.auth import get_password_hash
@@ -53,13 +54,13 @@ class TestAuths(AbstractPostgresTest):
             email="john.doe@openwebui.com",
             password=get_password_hash("old_password"),
             name="John Doe",
-            profile_image_url="/user.png",
+            profile_image_url=f"{WEBUI_BASE_PATH}/user.png",
             role="user",
         )
 
         with mock_webui_user(id=user.id):
             response = self.fast_api_client.post(
-                self.create_url("/update/password"),
+                self.create_url(f"{WEBUI_BASE_PATH}/update/password"),
                 json={"password": "old_password", "new_password": "new_password"},
             )
         assert response.status_code == 200
@@ -80,11 +81,11 @@ class TestAuths(AbstractPostgresTest):
             email="john.doe@openwebui.com",
             password=get_password_hash("password"),
             name="John Doe",
-            profile_image_url="/user.png",
+            profile_image_url=f"{WEBUI_BASE_PATH}/user.png",
             role="user",
         )
         response = self.fast_api_client.post(
-            self.create_url("/signin"),
+            self.create_url(f"{WEBUI_BASE_PATH}/signin"),
             json={"email": "john.doe@openwebui.com", "password": "password"},
         )
         assert response.status_code == 200
@@ -93,13 +94,13 @@ class TestAuths(AbstractPostgresTest):
         assert data["name"] == "John Doe"
         assert data["email"] == "john.doe@openwebui.com"
         assert data["role"] == "user"
-        assert data["profile_image_url"] == "/user.png"
+        assert data["profile_image_url"] == f"{WEBUI_BASE_PATH}/user.png"
         assert data["token"] is not None and len(data["token"]) > 0
         assert data["token_type"] == "Bearer"
 
     def test_signup(self):
         response = self.fast_api_client.post(
-            self.create_url("/signup"),
+            self.create_url(f"{WEBUI_BASE_PATH}/signup"),
             json={
                 "name": "John Doe",
                 "email": "john.doe@openwebui.com",
@@ -112,14 +113,14 @@ class TestAuths(AbstractPostgresTest):
         assert data["name"] == "John Doe"
         assert data["email"] == "john.doe@openwebui.com"
         assert data["role"] in ["admin", "user", "pending"]
-        assert data["profile_image_url"] == "/user.png"
+        assert data["profile_image_url"] == f"{WEBUI_BASE_PATH}/user.png"
         assert data["token"] is not None and len(data["token"]) > 0
         assert data["token_type"] == "Bearer"
 
     def test_add_user(self):
         with mock_webui_user():
             response = self.fast_api_client.post(
-                self.create_url("/add"),
+                self.create_url(f"{WEBUI_BASE_PATH}/add"),
                 json={
                     "name": "John Doe 2",
                     "email": "john.doe2@openwebui.com",

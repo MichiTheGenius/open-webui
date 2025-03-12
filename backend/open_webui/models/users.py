@@ -3,6 +3,8 @@ from typing import Optional
 
 from open_webui.internal.db import Base, JSONField, get_db
 
+from open_webui.env import WEBUI_BASE_PATH
+
 
 from open_webui.models.chats import Chats
 from open_webui.models.groups import Groups
@@ -100,7 +102,7 @@ class UsersTable:
         id: str,
         name: str,
         email: str,
-        profile_image_url: str = "/user.png",
+        profile_image_url: str = f"{WEBUI_BASE_PATH}/user.png",
         role: str = "pending",
         oauth_sub: Optional[str] = None,
     ) -> Optional[UserModel]:

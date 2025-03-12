@@ -7,7 +7,7 @@ import urllib.request
 from typing import Optional
 
 import websocket  # NOTE: websocket-client (https://github.com/websocket-client/websocket-client)
-from open_webui.env import SRC_LOG_LEVELS
+from open_webui.env import SRC_LOG_LEVELS, WEBUI_BASE_PATH
 from pydantic import BaseModel
 
 log = logging.getLogger(__name__)
@@ -172,7 +172,7 @@ async def comfyui_generate_image(
     try:
         ws = websocket.WebSocket()
         headers = {"Authorization": f"Bearer {api_key}"}
-        ws.connect(f"{ws_url}/ws?clientId={client_id}", header=headers)
+        ws.connect(f"{ws_url}/{WEBUI_BASE_PATH}/ws?clientId={client_id}", header=headers)
         log.info("WebSocket connection established.")
     except Exception as e:
         log.exception(f"Failed to connect to WebSocket server: {e}")

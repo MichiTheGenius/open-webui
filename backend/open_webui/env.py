@@ -112,6 +112,9 @@ if WEBUI_NAME != "Open WebUI":
 
 WEBUI_FAVICON_URL = "https://openwebui.com/favicon.png"
 
+WEBUI_URL = os.environ.get("WEBUI_URL", "")
+WEBUI_BASE_PATH = os.environ.get("WEBUI_BASE_PATH", "")
+
 TRUSTED_SIGNATURE_KEY = os.environ.get("TRUSTED_SIGNATURE_KEY", "")
 
 ####################################
