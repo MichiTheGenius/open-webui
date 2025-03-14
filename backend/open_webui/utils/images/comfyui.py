@@ -172,7 +172,7 @@ async def comfyui_generate_image(
     try:
         ws = websocket.WebSocket()
         headers = {"Authorization": f"Bearer {api_key}"}
-        ws.connect(f"{ws_url}/{WEBUI_BASE_PATH}/ws?clientId={client_id}", header=headers)
+        ws.connect(f"{ws_url}/ws?clientId={client_id}", header=headers)
         log.info("WebSocket connection established.")
     except Exception as e:
         log.exception(f"Failed to connect to WebSocket server: {e}")

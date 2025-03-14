@@ -364,6 +364,7 @@ logging.basicConfig(stream=sys.stdout, level=GLOBAL_LOG_LEVEL)
 log = logging.getLogger(__name__)
 log.setLevel(SRC_LOG_LEVELS["MAIN"])
 
+print(f"### ALL GOOD; THE WEBUI_BASE_PATH IS {WEBUI_BASE_PATH} ###")
 
 class SPAStaticFiles(StaticFiles):
     async def get_response(self, path: str, scope):
@@ -372,11 +373,14 @@ class SPAStaticFiles(StaticFiles):
         except (HTTPException, StarletteHTTPException) as ex:
             if ex.status_code == 404:
                 if path.endswith(".js"):
+                    print("Error here 1")
                     # Return 404 for javascript files
                     raise ex
                 else:
+                    print("Error here 2")
                     return await super().get_response("index.html", scope)
             else:
+                print("Error here 3")
                 raise ex
 
 
@@ -1114,6 +1118,7 @@ async def stop_task_endpoint(task_id: str, user=Depends(get_verified_user)):
         result = await stop_task(task_id)  # Use the function from tasks.py
         return result
     except ValueError as e:
+        print("Error here 4")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 
