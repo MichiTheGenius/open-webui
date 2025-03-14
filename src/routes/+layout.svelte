@@ -61,7 +61,7 @@
 			reconnectionDelay: 1000,
 			reconnectionDelayMax: 5000,
 			randomizationFactor: 0.5,
-			path: '/ws/socket.io',
+			path: '/openwebui/ws/socket.io',
 			transports: enableWebsocket ? ['websocket'] : ['polling', 'websocket'],
 			auth: { token: localStorage.token }
 		});
@@ -237,7 +237,7 @@
 					toast.custom(NotificationToast, {
 						componentProps: {
 							onClick: () => {
-								goto(`/c/${event.chat_id}`);
+								goto(`/openwebui/c/${event.chat_id}`);
 							},
 							content: content,
 							title: title
@@ -383,7 +383,7 @@
 				toast.custom(NotificationToast, {
 					componentProps: {
 						onClick: () => {
-							goto(`/channels/${event.channel_id}`);
+							goto(`/openwebui/channels/${event.channel_id}`);
 						},
 						content: data?.content,
 						title: event?.channel?.name
@@ -512,19 +512,19 @@
 					} else {
 						// Redirect Invalid Session User to /auth Page
 						localStorage.removeItem('token');
-						await goto('/auth');
+						await goto('/openwebui/auth');
 					}
 				} else {
 					// Don't redirect if we're already on the auth page
 					// Needed because we pass in tokens from OAuth logins via URL fragments
-					if ($page.url.pathname !== '/auth') {
-						await goto('/auth');
+					if ($page.url.pathname !== '/openwebui/auth') {
+						await goto('/openwebui/auth');
 					}
 				}
 			}
 		} else {
 			// Redirect to /error when Backend Not Detected
-			await goto(`/error`);
+			await goto(`/openwebui/error`);
 		}
 
 		await tick();
@@ -571,8 +571,8 @@
 
 	<!-- rosepine themes have been disabled as it's not up to date with our latest version. -->
 	<!-- feel free to make a PR to fix if anyone wants to see it return -->
-	<!-- <link rel="stylesheet" type="text/css" href="/themes/rosepine.css" />
-	<link rel="stylesheet" type="text/css" href="/themes/rosepine-dawn.css" /> -->
+	<!-- <link rel="stylesheet" type="text/css" href="{WEBUI_BASE_URL}/themes/rosepine.css" />
+	<link rel="stylesheet" type="text/css" href="{WEBUI_BASE_URL}/themes/rosepine-dawn.css" /> -->
 </svelte:head>
 
 {#if loaded}

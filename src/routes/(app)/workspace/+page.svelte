@@ -6,18 +6,18 @@
 	onMount(() => {
 		if ($user?.role !== 'admin') {
 			if ($user?.permissions?.workspace?.models) {
-				goto('/workspace/models');
+				goto('/openwebui/workspace/models');
 			} else if ($user?.permissions?.workspace?.knowledge) {
-				goto('/workspace/knowledge');
+				goto('/openwebui/workspace/knowledge');
 			} else if ($user?.permissions?.workspace?.prompts) {
-				goto('/workspace/prompts');
+				goto('/openwebui/workspace/prompts');
 			} else if ($user?.permissions?.workspace?.tools) {
-				goto('/workspace/tools');
+				goto('/openwebui/workspace/tools');
 			} else {
-				goto('/');
+				goto('/openwebui');
 			}
 		} else {
-			goto('/workspace/models');
+			goto('/openwebui/workspace/models');
 		}
 	});
 </script>

@@ -54,7 +54,7 @@
 				)
 			);
 
-			await goto('/admin/functions');
+			await goto('/openwebui/admin/functions');
 		}
 	};
 

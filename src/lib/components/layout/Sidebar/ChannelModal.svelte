@@ -59,8 +59,8 @@
 			toast.success('Channel deleted successfully');
 			onUpdate();
 
-			if ($page.url.pathname === `/channels/${channel.id}`) {
-				goto('/');
+			if ($page.url.pathname === `/openwebui/channels/${channel.id}`) {
+				goto('/openwebui');
 			}
 		}
 

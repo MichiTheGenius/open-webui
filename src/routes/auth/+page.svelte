@@ -46,7 +46,7 @@
 			await user.set(sessionUser);
 			await config.set(await getBackendConfig());
 
-			const redirectPath = querystringValue('redirect') || '/';
+			const redirectPath = querystringValue('redirect') || '/openwebui';
 			goto(redirectPath);
 		}
 	};
@@ -140,7 +140,7 @@
 
 	onMount(async () => {
 		if ($user !== undefined) {
-			await goto('/');
+			await goto('/openwebui');
 		}
 		await checkOauthCallback();
 

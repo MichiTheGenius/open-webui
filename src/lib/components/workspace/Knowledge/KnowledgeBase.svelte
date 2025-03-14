@@ -515,7 +515,7 @@
 		if (res) {
 			knowledge = res;
 		} else {
-			goto('/workspace/knowledge');
+			goto('/openwebui/workspace/knowledge');
 		}
 
 		const dropZone = document.querySelector('body');
@@ -678,7 +678,7 @@
 								<div class=" flex-1 text-xl font-medium">
 									<a
 										class="hover:text-gray-500 dark:hover:text-gray-100 hover:underline grow line-clamp-1"
-										href={selectedFile.id ? `/api/v1/files/${selectedFile.id}/content` : '#'}
+										href={selectedFile.id ? `/openwebui/api/v1/files/${selectedFile.id}/content` : '#'}
 										target="_blank"
 									>
 										{selectedFile?.meta?.name}

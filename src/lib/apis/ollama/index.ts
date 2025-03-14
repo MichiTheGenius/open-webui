@@ -177,6 +177,8 @@ export const updateOllamaUrls = async (token: string = '', urls: string[]) => {
 
 export const getOllamaVersion = async (token: string, urlIdx?: number) => {
 	let error = null;
+	console.log('urlIdx is:');
+	console.log(urlIdx);
 
 	const res = await fetch(`${OLLAMA_API_BASE_URL}/api/version${urlIdx ? `/${urlIdx}` : ''}`, {
 		method: 'GET',
@@ -187,10 +189,13 @@ export const getOllamaVersion = async (token: string, urlIdx?: number) => {
 		}
 	})
 		.then(async (res) => {
+			console.log(`result.json of ${OLLAMA_API_BASE_URL}/api/version${urlIdx ? `/${urlIdx}` : ''}`);
+			console.log(res.json());
 			if (!res.ok) throw await res.json();
 			return res.json();
 		})
 		.catch((err) => {
+			console.leg('error here!')
 			console.log(err);
 			if ('detail' in err) {
 				error = err.detail;
@@ -245,6 +250,7 @@ export const getOllamaModels = async (token: string = '', urlIdx: null | number 
 
 export const generatePrompt = async (token: string = '', model: string, conversation: string) => {
 	let error = null;
+	console.log('### Function: generatePrompt in src/lib/apis/ollama/index.ts');
 
 	if (conversation === '') {
 		conversation = '[no existing conversation]';
@@ -268,6 +274,7 @@ export const generatePrompt = async (token: string = '', model: string, conversa
 			`
 		})
 	}).catch((err) => {
+		console.log('### ERROR in generatePrompt in src/lib/apis/ollama/index.ts');
 		console.log(err);
 		if ('detail' in err) {
 			error = err.detail;
